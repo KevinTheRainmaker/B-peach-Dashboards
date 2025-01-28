@@ -13,15 +13,21 @@ OWNER = "KevinTheRainmaker"  # 깃허브 사용자명
 REPO = "B-Peach-Evaluation"  # 레포지토리 이름
 FOLDER_PATH = "results"  # 폴더 경로
 
-# Load API key from environment variables or .env file
-if os.environ.get("GITHUB_ACTIONS") is None:
+if "GITHUB_ACTIONS" not in os.environ:
     from dotenv import load_dotenv
-    print('Loading API Key from local .env file...')
-    load_dotenv()
-    ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
+    print('Checking for Streamlit secrets...')
+    
+    # Streamlit 환경에서 secrets가 있는 경우
+    if "ACCESS_TOKEN" in st.secrets:
+        print('Loading API Key from Streamlit Secrets...')
+        ACCESS_TOKEN = st.secrets["ACCESS_TOKEN"]
+    else:
+        print('Loading API Key from local .env file...')
+        load_dotenv()
+        ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
 else:
     print('Loading API Key from GitHub Secrets...')
-    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN", st.secrets["ACCESS_TOKEN"])
+    ACCESS_TOKEN = os.getenv("ACCESS_TOKEN", st.secrets.get("ACCESS_TOKEN"))
 
 # Get the list of files in the GitHub folder
 @st.cache_data
@@ -78,7 +84,7 @@ if files:
         
     if not aggregated_data.empty:
         st.subheader("📋 Aggregated Data Overview")
-        st.dataframe(aggregated_data.head(10))
+        st.dataframe(aggregated_data, height=400)
         
         # Display statistics
         st.sidebar.subheader("📊 Data Statistics")
