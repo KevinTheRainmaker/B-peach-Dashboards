@@ -101,7 +101,8 @@ if files:
                 selected_data['span_count'] = selected_data['original_passage'].str.count(r'<span')
 
                 # Display statistics for the selected file
-                st.sidebar.subheader(f"📊 Statistics for {selected_file}")
+                name = str(selected_file).replace('output_','')
+                st.sidebar.subheader(f"📊 Statistics for {name}")
                 st.sidebar.write(selected_data.describe())
         
         # Visualize with a boxplot
