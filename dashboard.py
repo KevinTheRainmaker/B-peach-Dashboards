@@ -75,20 +75,34 @@ files = get_file_list()
 if files:
     st.sidebar.write(f"📂 Found {len(files)} CSV files in the folder.")
     
-    # Display the list of files in the sidebar
-    selected_file = st.sidebar.selectbox("Select a file to preview", files)
-    
-    # Aggregate data and display summary
-    with st.spinner("📊 Aggregating data..."):
+    # Use session state to store selected file
+    if "selected_file" not in st.session_state:
+        st.session_state.selected_file = files[0]  # Default to first file
+
+    selected_file = st.sidebar.selectbox(
+        "Select a file to preview",
+        files,
+        index=files.index(st.session_state.selected_file),
+        key="selected_file"
+    )
+
+    # Aggregate all data
+    with st.spinner("📊 Aggregating all CSV data..."):
         aggregated_data = aggregate_csv_files(files)
-        
+
     if not aggregated_data.empty:
         st.subheader("📋 Aggregated Data Overview")
-        st.dataframe(aggregated_data, height=400)
-        
-        # Display statistics
-        st.sidebar.subheader("📊 Data Statistics")
-        st.sidebar.write(aggregated_data.describe())
+        st.dataframe(aggregated_data.head(10))
+
+        # Load the selected file separately for statistics
+        with st.spinner(f"📄 Loading {selected_file} statistics..."):
+            selected_data = fetch_csv_content(selected_file)
+            if not selected_data.empty:
+                selected_data['span_count'] = selected_data['original_passage'].str.count(r'<span')
+
+                # Display statistics for the selected file
+                st.sidebar.subheader(f"📊 Statistics for {selected_file}")
+                st.sidebar.write(selected_data.describe())
         
         # Visualize with a boxplot
         st.subheader("📈 Boxplot of EM Score by Number of <span> Tags")
