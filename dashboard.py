@@ -92,7 +92,7 @@ if files:
 
     if not aggregated_data.empty:
         st.subheader("📋 Aggregated Data Overview")
-        st.dataframe(aggregated_data.head(10))
+        st.dataframe(aggregated_data, height=400)
 
         # Load the selected file separately for statistics
         with st.spinner(f"📄 Loading {selected_file} statistics..."):
