@@ -104,6 +104,8 @@ if files:
                 name = str(selected_file).replace('output_','')
                 st.sidebar.subheader(f"📊 Statistics for {name}")
                 st.sidebar.write(selected_data.describe())
+            else:
+                st.sidebar.write('🤯 Selected data is empty')
         
         # Visualize with a boxplot
         st.subheader("📈 Boxplot of EM Score by Number of <span> Tags")
