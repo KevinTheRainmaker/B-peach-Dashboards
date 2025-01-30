@@ -30,7 +30,6 @@ else:
     ACCESS_TOKEN = os.getenv("ACCESS_TOKEN", st.secrets.get("ACCESS_TOKEN"))
 
 # Get the list of files in the GitHub folder
-@st.cache_data
 def get_file_list():
     headers = {"Authorization": f"token {ACCESS_TOKEN}"}
     url = f"{GITHUB_API_URL}/{OWNER}/{REPO}/contents/{FOLDER_PATH}"
