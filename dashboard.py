@@ -57,6 +57,12 @@ def fetch_csv_content(file_name):
         st.error(f"❌ Failed to fetch the file: {file_name}")
         return pd.DataFrame()
 
+def get_csv_download_link(df, file_name):
+    csv = df.to_csv(index=False, encoding='utf-8-sig')
+    b64 = base64.b64encode(csv.encode()).decode()  # Base64 인코딩
+    href = f'<a href="data:file/csv;base64,{b64}" download="{file_name}">📥 Download {file_name}</a>'
+    return href
+
 # Aggregate all CSV files into one DataFrame
 def aggregate_csv_files(file_names):
     all_data = []
@@ -103,6 +109,9 @@ if files:
                 name = str(selected_file).replace('output_','')
                 st.sidebar.subheader(f"📊 Statistics for {name}")
                 st.sidebar.write(selected_data.describe())
+                
+                # CSV 다운로드 버튼 추가
+                st.sidebar.markdown(get_csv_download_link(selected_data, selected_file), unsafe_allow_html=True)
             else:
                 st.sidebar.write('🤯 Selected data is empty')
         
