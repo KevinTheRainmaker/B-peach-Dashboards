@@ -123,8 +123,15 @@ if files:
         aggregated_data = aggregate_csv_files(files)
 
     if not aggregated_data.empty:
-        st.subheader("📋 Aggregated Data Overview")
-        st.dataframe(aggregated_data, height=400)
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.subheader("📋 Aggregated Data Overview")
+            st.dataframe(aggregated_data, height=400)
+
+        with col2:
+            st.subheader("🏸 Pattern Analysis")
+            st.dataframe(analysis_pattern(aggregated_data), height=400)
 
         # Load the selected file separately for statistics
         with st.spinner(f"📄 Loading {selected_file} statistics..."):
@@ -157,9 +164,6 @@ if files:
         plt.ylabel('EM Score', fontsize=12)
         plt.grid(axis='y', linestyle='--', alpha=0.7)
         st.pyplot(plt)
-
-        st.subheader("🏸 Pattern Analysis")
-        st.dataframe(analysis_pattern(aggregated_data), height=400)
     else:
         st.warning("⚠️ No data to visualize.")
 else:
