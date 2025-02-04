@@ -83,7 +83,7 @@ def analysis_pattern(df, weight_factor=2.0):
         'tag': tag_em_avg.keys(),
         'average_em_score': tag_em_avg.values(),
         'tag_count': [tag_counts[tag] for tag in tag_em_avg.keys()]
-    }).sort_values(by=[('average_em_score','tag_count * @weight_factor')], ascending=False, ignore_index=True)
+    }).sort_values(by=lambda df: df["average_em_score"] + (df["tag_count"] * weight_factor), ascending=False, ignore_index=True)
     return tag_analysis_df
 
 # def get_csv_download_link(df, file_name):
