@@ -126,7 +126,7 @@ if files:
         col1, col2 = st.columns(2)
 
         with col1:
-            st.subheader("📋 Aggregated Data Overview")
+            st.subheader("📋 Data Overview")
             st.dataframe(aggregated_data, height=400)
 
         with col2:
