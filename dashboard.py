@@ -57,6 +57,33 @@ def fetch_csv_content(file_name):
         st.error(f"❌ Failed to fetch the file: {file_name}")
         return pd.DataFrame()
 
+def analysis_pattern(df):
+    # 태그별 번안 방지율 분석
+    df['tagged_words'] = df['tagged_words'].apply(eval)
+
+    tag_counts = {}
+    tag_em_scores = {}
+
+    for _, row in df.iterrows():
+        tags = row['tagged_words']
+        em_score = row['em_score']
+        
+        for tag in tags:
+            if tag not in tag_counts:
+                tag_counts[tag] = 0
+                tag_em_scores[tag] = []
+            tag_counts[tag] += 1
+            tag_em_scores[tag].append(em_score)
+
+    tag_em_avg = {tag: sum(scores) / len(scores) for tag, scores in tag_em_scores.items()}
+
+    tag_analysis_df = pd.DataFrame({
+        'tag': tag_em_avg.keys(),
+        'average_em_score': tag_em_avg.values(),
+        'tag_count': [tag_counts[tag] for tag in tag_em_avg.keys()]
+    }).sort_values(by=['average_em_score','tag_count'], ascending=False)
+    return tag_analysis_df
+
 # def get_csv_download_link(df, file_name):
 #     csv = df.to_csv(index=False, encoding='utf-8-sig')
 #     b64 = base64.b64encode(csv.encode()).decode()  # Base64 인코딩
@@ -130,6 +157,9 @@ if files:
         plt.ylabel('EM Score', fontsize=12)
         plt.grid(axis='y', linestyle='--', alpha=0.7)
         st.pyplot(plt)
+
+        st.subheader("🏸 Pattern Analysis")
+        st.dataframe(analysis_pattern(aggregated_data), height=400)
     else:
         st.warning("⚠️ No data to visualize.")
 else:
