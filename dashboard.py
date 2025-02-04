@@ -59,7 +59,7 @@ def fetch_csv_content(file_name):
         st.error(f"❌ Failed to fetch the file: {file_name}")
         return pd.DataFrame()
 
-def analysis_pattern(df):
+def analysis_pattern(df, weight_factor=2.0):
     # 태그별 번안 방지율 분석
     df['tagged_words'] = df['tagged_words'].apply(eval)
 
@@ -83,7 +83,7 @@ def analysis_pattern(df):
         'tag': tag_em_avg.keys(),
         'average_em_score': tag_em_avg.values(),
         'tag_count': [tag_counts[tag] for tag in tag_em_avg.keys()]
-    }).sort_values(by=['average_em_score','tag_count'], ascending=False, ignore_index=True)
+    }).sort_values(by=[('average_em_score','tag_count * @weight_factor')], ascending=False, ignore_index=True)
     return tag_analysis_df
 
 # def get_csv_download_link(df, file_name):
