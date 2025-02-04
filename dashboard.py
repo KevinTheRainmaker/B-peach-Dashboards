@@ -125,7 +125,7 @@ if files:
         aggregated_data = aggregate_csv_files(files)
 
     if not aggregated_data.empty:
-        col1, col2 = st.columns(2)
+        col1, col2 = st.columns([1.3,0.7])
 
         with col1:
             st.subheader("📋 Data Overview")
@@ -159,7 +159,7 @@ if files:
         
         # Visualize with a boxplot
         st.subheader("📈 Boxplot of EM Score by Number of <span> Tags")
-        plt.figure(figsize=(12, 6))
+        plt.figure(figsize=(10, 5))
         sns.boxplot(x='span_count', y='em_score', data=aggregated_data, palette="coolwarm")
         plt.title('Distribution of EM Scores by Number of <span> Tags', fontsize=16, fontweight='bold')
         plt.xlabel('Number of <span> Tags', fontsize=12)
