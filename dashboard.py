@@ -7,6 +7,8 @@ import seaborn as sns
 from io import StringIO
 import os 
 
+st.set_page_config(layout="wide")
+
 # GitHub API 기본 설정
 GITHUB_API_URL = "https://api.github.com/repos"
 OWNER = "KevinTheRainmaker"  # 깃허브 사용자명
@@ -81,7 +83,7 @@ def analysis_pattern(df):
         'tag': tag_em_avg.keys(),
         'average_em_score': tag_em_avg.values(),
         'tag_count': [tag_counts[tag] for tag in tag_em_avg.keys()]
-    }).sort_values(by=['average_em_score','tag_count'], ascending=False)
+    }).sort_values(by=['average_em_score','tag_count'], ascending=False, ignore_index=True)
     return tag_analysis_df
 
 # def get_csv_download_link(df, file_name):
